@@ -19,14 +19,24 @@ int main (int argc, char *argv[])
         for (int i = 0; i < SIZE; i++) {
             num1[i] = 100;
         }
-        MPI_Send(&num1, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD);
-        MPI_Recv(&num2, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Send(&num1, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD);
+        // MPI_Recv(&num2, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // Trimitem num1 catre 1 si primim in num2 de la 1
+        MPI_Sendrecv(num1, SIZE, MPI_INT, 1, 0,
+                     num2, SIZE, MPI_INT, 1, 0,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Rank 0 a terminat schimbul.\n");
     } else {
         for (int i = 0; i < SIZE; i++) {
             num2[i] = 200;
         }
-        MPI_Send(&num2, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD);
-        MPI_Recv(&num1, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // MPI_Send(&num2, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        // MPI_Recv(&num1, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // Trimitem num2 catre 0 si primim in num1 de la 0
+        MPI_Sendrecv(num2, SIZE, MPI_INT, 0, 0,
+                     num1, SIZE, MPI_INT, 0, 0,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Rank 1 a terminat schimbul.\n");
     }
 
     MPI_Finalize();
