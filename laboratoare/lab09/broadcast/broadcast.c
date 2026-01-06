@@ -20,6 +20,13 @@ int main (int argc, char *argv[])
 
     for (int i = 1; i < procs; i *= 2) {
         // TODO
+        if (rank < i && rank + i < procs) {
+            // trimite la procesul cu rankul rank + i
+            MPI_Send(&value, 1, MPI_INT, rank + i, 0, MPI_COMM_WORLD);
+        } else if (rank >= i && rank < i * 2) {
+            // primeste de la procesul cu rankul rank - i
+            MPI_Recv(&value, 1, MPI_INT, rank - i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        }
     }
 
     printf("Process [%d] has value = %d\n", rank, value);
